@@ -2,6 +2,7 @@ package com.example.lunixpassmob;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 
 import com.example.lunixpassmob.adapter.GameAdapter;
 import com.example.lunixpassmob.adapter.NewsAdapter;
@@ -48,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        getSupportActionBar().hide();
         setContentView(binding.getRoot());
 
 
