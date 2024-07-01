@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.lunixpassmob.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.lunixpassmob.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_lunixpass"
+        android:name="com.example.lunixpassmob.ui.lunixpass.LunixpassFragment"
+        android:label="@string/title_lunixpass"
+        tools:layout="@layout/fragment_lunixpass" />
+
+    <fragment
+        android:id="@+id/navigation_explorer"
+        android:name="com.example.lunixpassmob.ui.explorer.ExplorerFragment"
+        android:label="@string/title_explorer"
+        tools:layout="@layout/fragment_explorer" />
+
+    <fragment
+        android:id="@+id/navigation_library"
+        android:name="com.example.lunixpassmob.ui.library.LibraryFragment"
+        android:label="@string/title_library"
+        tools:layout="@layout/fragment_library" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.lunixpassmob.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+</navigation>

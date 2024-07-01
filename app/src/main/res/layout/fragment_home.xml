@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="10dp"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:background="#131313"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/xxpaass_logo" />
+
+        <ImageView
+            android:id="@+id/notification"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/cs"
+            app:srcCompat="@drawable/ic_notifications_black_24dp" />
+
+        <ImageView
+            android:id="@+id/cs"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="309dp"
+            android:layout_marginTop="12dp"
+            app:srcCompat="@drawable/ic_call_24" />
+
+        <ImageView
+            android:id="@+id/account_profile"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="11dp"
+            android:layout_toEndOf="@+id/notification"
+            app:srcCompat="@drawable/ic_account_circle_24" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textView"
+            android:paddingLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Latest News For You"
+            android:textColor="@android:color/white"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/news_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:scrollbars="none" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/top_game"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/topgame"
+            android:paddingLeft="25dp"
+            android:text="Newest Release"
+            android:textColor="@android:color/white"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/game_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:scrollbars="none" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Recomend_for_you"
+            android:paddingLeft="25dp"
+            android:text="Recommend For you"
+            android:textColor="@android:color/white"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommend_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:scrollbars="none" />
+    </LinearLayout>
+
+</LinearLayout>

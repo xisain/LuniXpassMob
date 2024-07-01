@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#131313"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/xxpaass_logo" />
+
+        <ImageView
+            android:id="@+id/notification"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/cs"
+            app:srcCompat="@drawable/ic_notifications_black_24dp" />
+
+        <ImageView
+            android:id="@+id/cs"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="309dp"
+            android:layout_marginTop="12dp"
+            app:srcCompat="@drawable/ic_call_24" />
+
+        <ImageView
+            android:id="@+id/account_profile"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="11dp"
+            android:layout_toEndOf="@+id/notification"
+            app:srcCompat="@drawable/ic_account_circle_24" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/library_title"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textColor="#D9D9D9"
+        android:text="Library"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/library_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#D9D9D9"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp" />
+</LinearLayout>

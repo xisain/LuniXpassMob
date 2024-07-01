@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "731486024167",
+    "firebase_url": "https://quiet-biplane-423907-k3-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "quiet-biplane-423907-k3",
+    "storage_bucket": "quiet-biplane-423907-k3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731486024167:android:a378826c9f22ceca008d42",
+        "android_client_info": {
+          "package_name": "com.example.lunixpassmob"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxBMtEOj6ULC3H6VffswfMb2hWvWut3fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731486024167:android:41d2a1b2cbd94d97008d42",
+        "android_client_info": {
+          "package_name": "com.lunixcorp.lunixpass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxBMtEOj6ULC3H6VffswfMb2hWvWut3fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731486024167:android:1f4fecfe3a799f9f008d42",
+        "android_client_info": {
+          "package_name": "com.sain.lunixpass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxBMtEOj6ULC3H6VffswfMb2hWvWut3fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

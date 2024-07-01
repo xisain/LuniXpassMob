@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:id="@+id/cardView"
+    android:layout_height="225dp">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/gameIcon"
+        android:layout_width="150dp"
+        android:layout_height="225dp"
+        android:scaleType="center"/>
+
+
+</com.google.android.material.card.MaterialCardView>
