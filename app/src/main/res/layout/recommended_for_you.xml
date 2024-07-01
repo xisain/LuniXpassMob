@@ -4,12 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/cardView"
+    android:background="@color/black"
    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="24dp">
+        android:paddingLeft="24dp"
+        android:background="#131313">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/gameImage"
@@ -29,7 +31,7 @@
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/gameImage"
             android:text="Title"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
         <TextView
@@ -42,7 +44,7 @@
             android:layout_toEndOf="@id/gameImage"
             android:maxLines="1"
             android:text="desc"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="14sp" />
 
     </RelativeLayout>

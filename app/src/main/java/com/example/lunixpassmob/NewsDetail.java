@@ -2,6 +2,7 @@ package com.example.lunixpassmob;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,8 +28,9 @@ public class NewsDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_news_detail);
-
+        getSupportActionBar().hide();
         newsHeader = findViewById(R.id.news_header);
         newsContent = findViewById(R.id.news_content);
         newsDate = findViewById(R.id.news_date);

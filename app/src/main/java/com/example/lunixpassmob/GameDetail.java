@@ -3,6 +3,7 @@ package com.example.lunixpassmob;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,13 +39,14 @@ public class GameDetail extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.d("GameDetail", user.getUid());
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_detail);
-
+        getSupportActionBar().hide();
         gameName = findViewById(R.id.gameName);
         gameDesc = findViewById(R.id.gameDescription);
         gameDeveloper = findViewById(R.id.gameDeveloper);
@@ -116,49 +118,57 @@ public class GameDetail extends AppCompatActivity {
     }
 
     private void checkAndAddGameToLibrary(String gameId) {
-        DocumentReference userRef = db.collection("user").document(user.getUid());
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    List<DocumentReference> library = (List<DocumentReference>) documentSnapshot.get("library");
-                    if (library != null) {
-                        for (DocumentReference gameRef : library) {
-                            if (gameRef.getId().equals(gameId)) {
-                                Toast.makeText(GameDetail.this, "Game already in library", Toast.LENGTH_SHORT).show();
-                                return;
+        if(user !=null) {
+            DocumentReference userRef = db.collection("user").document(user.getUid());
+            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        List<DocumentReference> library = (List<DocumentReference>) documentSnapshot.get("library");
+                        if (library != null) {
+                            for (DocumentReference gameRef : library) {
+                                if (gameRef.getId().equals(gameId)) {
+                                    Toast.makeText(GameDetail.this, "Game already in library", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
                         }
+                        addGameToLibrary(gameId);
+                    } else {
+                        addGameToLibrary(gameId);
                     }
-                    addGameToLibrary(gameId);
-                } else {
-                    addGameToLibrary(gameId);
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("GameDetail", "Error checking library", e);
-                Toast.makeText(GameDetail.this, "Error checking library", Toast.LENGTH_SHORT).show();
-            }
-        });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("GameDetail", "Error checking library", e);
+                    Toast.makeText(GameDetail.this, "Error checking library", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addGameToLibrary(String gameId) {
-        DocumentReference userRef = db.collection("user").document(user.getUid());
-        userRef.update("library", FieldValue.arrayUnion(db.collection("game").document(gameId)))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(GameDetail.this, "Game added to library", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("GameDetail", "Error adding game to library", e);
-                        Toast.makeText(GameDetail.this, "Error adding game to library", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if(user !=null){
+            DocumentReference userRef = db.collection("user").document(user.getUid());
+            userRef.update("library", FieldValue.arrayUnion(db.collection("game").document(gameId)))
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(GameDetail.this, "Game added to library", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("GameDetail", "Error adding game to library", e);
+                            Toast.makeText(GameDetail.this, "Error adding game to library", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else {
+            Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
+        }
     }
 }

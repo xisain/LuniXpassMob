@@ -24,8 +24,7 @@ public class ExplorerFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textView;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 
