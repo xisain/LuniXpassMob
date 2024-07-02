@@ -24,10 +24,10 @@
         tools:layout="@layout/fragment_lunixpass" />
 
     <fragment
-        android:id="@+id/navigation_explorer"
-        android:name="com.example.lunixpassmob.ui.explorer.ExplorerFragment"
-        android:label="@string/title_explorer"
-        tools:layout="@layout/fragment_explorer" />
+        android:id="@+id/navigation_profile"
+        android:name="com.example.lunixpassmob.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_library"
