@@ -1,5 +1,6 @@
 package com.example.lunixpassmob.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lunixpassmob.Login;
 import com.example.lunixpassmob.R;
 import com.example.lunixpassmob.adapter.GameAdapter;
 import com.example.lunixpassmob.adapter.NewsAdapter;
@@ -126,17 +128,19 @@ public class HomeFragment extends Fragment {
                 });
         // Sementara aja
         img = binding.accountProfile;
-        img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mAuth.getCurrentUser() !=null) {
-                    Toast.makeText(getContext(), "Logged Outh", Toast.LENGTH_SHORT).show();
-                    mAuth.signOut();
-                } else {
-                    Toast.makeText(getContext(), "Already Logout", Toast.LENGTH_SHORT).show();
+        if(mAuth.getCurrentUser() !=null){
+            img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mAuth.getCurrentUser() !=null) {
+                        Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
+                        mAuth.signOut();
+                    } else {
+                        startActivity( new Intent(getContext(), Login.class));
+                    }
                 }
-            }
-        });
+            });
+        }
 
 
         return root;

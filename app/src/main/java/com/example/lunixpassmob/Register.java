@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,16 +32,20 @@ public class Register extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     EditText RegUsername, RegPassword, RegEmail;
+    TextView  logBtn;
     Button RegButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         RegEmail = findViewById(R.id.reg_email);
         RegPassword = findViewById(R.id.reg_password);
         RegUsername = findViewById(R.id.reg_username);
         RegButton = findViewById(R.id.reg_button);
+        logBtn = findViewById(R.id.login);
 
         RegButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,9 +67,19 @@ public class Register extends AppCompatActivity {
                             createFirestoreUser(userId, username, email);
                         } else {
                             Log.d("Error", "Account creation failed: " + task.getException().getMessage());
+                            Toast.makeText(Register.this, "Error : " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+            }
+        });
+        logBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                Intent intent = new Intent(Register.this, Login.class);
+                startActivity(intent);
+
             }
         });
     }

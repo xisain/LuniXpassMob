@@ -18,6 +18,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
@@ -70,9 +74,19 @@ public class Login extends AppCompatActivity {
                                     finish();
                                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 }
-                            } else {
-                                Log.w("TAG", "signInWithEmail:failure", task.getException());
-                                Toast.makeText(Login.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            }  else {
+                                Log.w("Login Failure", task.getException().getMessage(), task.getException());
+                                String errorMessage;
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthInvalidUserException e) {
+                                    errorMessage = e.getMessage();
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    errorMessage = "Invalid email or password";
+                                } catch (Exception e){
+                                    errorMessage = e.getMessage();
+                                }
+                                Toast.makeText(Login.this, errorMessage, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
