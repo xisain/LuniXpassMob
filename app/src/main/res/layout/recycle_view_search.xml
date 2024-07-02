@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cardView"
+    android:background="@color/black"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="24dp"
+        android:background="@color/abu_abumuda">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/gameImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:id="@+id/gameName"
+            android:layout_width="248dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@id/gameImage"
+            android:text="Title"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/gameDesc"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gameName"
+            android:layout_marginStart="25dp"
+            android:layout_marginBottom="12dp"
+            android:layout_toEndOf="@id/gameImage"
+            android:maxLines="1"
+            android:text="desc"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

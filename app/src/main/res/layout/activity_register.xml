@@ -29,13 +29,13 @@
         <!--            android:gravity="center" />-->
 
         <EditText
-            android:id="@+id/login_name"
+            android:id="@+id/reg_username"
             android:layout_width="311dp"
             android:layout_height="45dp"
             android:layout_marginLeft="55dp"
             android:autofillHints="Email"
             android:ems="10"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:gravity="start"
             android:hint="Enter your name"
             android:backgroundTint="#FF0000"
@@ -54,26 +54,26 @@
         <!--            android:gravity="center" />-->
 
         <EditText
-            android:id="@+id/login_email"
+            android:id="@+id/reg_email"
             android:layout_width="311dp"
             android:layout_height="45dp"
             android:layout_marginLeft="55dp"
-            android:layout_below="@+id/login_name"
+            android:layout_below="@+id/reg_username"
             android:layout_marginTop="10dp"
             android:autofillHints="Password"
             android:ems="10"
-            android:inputType="textPassword"
+            android:inputType="textEmailAddress"
             android:gravity="start"
             android:hint="Enter your email"
             android:backgroundTint="#FF0000"
             android:textColorHint="#D9D9D9" />
 
         <EditText
-            android:id="@+id/login_password"
+            android:id="@+id/reg_password"
             android:layout_width="311dp"
             android:layout_height="45dp"
             android:layout_marginLeft="55dp"
-            android:layout_below="@+id/login_email"
+            android:layout_below="@+id/reg_email"
             android:layout_marginTop="10dp"
             android:autofillHints="Password"
             android:ems="10"
@@ -86,12 +86,12 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/reg_button"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="55dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="Register"
         android:gravity="center"
         android:backgroundTint="@color/red"
         />

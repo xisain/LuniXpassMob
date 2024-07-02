@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ import com.example.lunixpassmob.adapter.RecommendAdapter;
 import com.example.lunixpassmob.databinding.FragmentHomeBinding;
 import com.example.lunixpassmob.model.game.Game;
 import com.example.lunixpassmob.model.news.NewsItem;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-
+    private ImageView img;
     private FragmentHomeBinding binding;
     private RecyclerView newsRecyclerView, gameRecyclerView, recommendedRecyclerView;
     private NewsAdapter newsAdapter;
@@ -44,6 +47,7 @@ public class HomeFragment extends Fragment {
     private List<Game> gameList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     final CollectionReference docRef = db.collection("user");
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -120,7 +124,19 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 });
-
+        // Sementara aja
+        img = binding.accountProfile;
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAuth.getCurrentUser() !=null) {
+                    Toast.makeText(getContext(), "Logged Outh", Toast.LENGTH_SHORT).show();
+                    mAuth.signOut();
+                } else {
+                    Toast.makeText(getContext(), "Already Logout", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
         return root;
