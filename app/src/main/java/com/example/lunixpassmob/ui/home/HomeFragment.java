@@ -126,23 +126,6 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 });
-        // Sementara aja
-        img = binding.accountProfile;
-        if(mAuth.getCurrentUser() !=null){
-            img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mAuth.getCurrentUser() !=null) {
-                        Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
-                    } else {
-                        startActivity( new Intent(getContext(), Login.class));
-                    }
-                }
-            });
-        }
-
-
         return root;
     }
 

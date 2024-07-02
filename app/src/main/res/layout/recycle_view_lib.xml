@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="150dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingLeft="10dp">
+
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="wrap_content"
     android:id="@+id/cardView"
-    android:layout_height="225dp">
+    android:layout_height="wrap_content"
+
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp">
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/gameIcon"
         android:layout_width="150dp"
@@ -11,3 +20,4 @@
 
 
 </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

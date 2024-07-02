@@ -36,6 +36,7 @@ public class GameDetail extends AppCompatActivity {
     ImageView gameImage;
     FirebaseFirestore db;
     FirebaseUser user;
+    boolean isGameInLibrary = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class GameDetail extends AppCompatActivity {
             uid = extras.getString("id");
             if (uid != null) {
                 fetchGameDetails(uid);
+                checkGameInLibrary(uid);
             } else {
                 Toast.makeText(this, "Game ID not found", Toast.LENGTH_SHORT).show();
             }
@@ -70,8 +72,11 @@ public class GameDetail extends AppCompatActivity {
         addToLib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("GameDetail", "Adding to library: " + uid);
-                checkAndAddGameToLibrary(uid);
+                if (isGameInLibrary) {
+                    removeGameFromLibrary(uid);
+                } else {
+                    addGameToLibrary(uid);
+                }
             }
         });
     }
@@ -117,8 +122,8 @@ public class GameDetail extends AppCompatActivity {
         });
     }
 
-    private void checkAndAddGameToLibrary(String gameId) {
-        if(user !=null) {
+    private void checkGameInLibrary(String gameId) {
+        if(user != null) {
             DocumentReference userRef = db.collection("user").document(user.getUid());
             userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -128,14 +133,17 @@ public class GameDetail extends AppCompatActivity {
                         if (library != null) {
                             for (DocumentReference gameRef : library) {
                                 if (gameRef.getId().equals(gameId)) {
-                                    Toast.makeText(GameDetail.this, "Game already in library", Toast.LENGTH_SHORT).show();
+                                    isGameInLibrary = true;
+                                    addToLib.setText("Remove from Library");
                                     return;
                                 }
                             }
                         }
-                        addGameToLibrary(gameId);
+                        isGameInLibrary = false;
+                        addToLib.setText("Add to Library");
                     } else {
-                        addGameToLibrary(gameId);
+                        isGameInLibrary = false;
+                        addToLib.setText("Add to Library");
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -151,13 +159,15 @@ public class GameDetail extends AppCompatActivity {
     }
 
     private void addGameToLibrary(String gameId) {
-        if(user !=null){
+        if(user != null){
             DocumentReference userRef = db.collection("user").document(user.getUid());
             userRef.update("library", FieldValue.arrayUnion(db.collection("game").document(gameId)))
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(GameDetail.this, "Game added to library", Toast.LENGTH_SHORT).show();
+                            isGameInLibrary = true;
+                            addToLib.setText("Remove from Library");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -165,6 +175,30 @@ public class GameDetail extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             Log.w("GameDetail", "Error adding game to library", e);
                             Toast.makeText(GameDetail.this, "Error adding game to library", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else {
+            Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void removeGameFromLibrary(String gameId) {
+        if(user != null){
+            DocumentReference userRef = db.collection("user").document(user.getUid());
+            userRef.update("library", FieldValue.arrayRemove(db.collection("game").document(gameId)))
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(GameDetail.this, "Game removed from library", Toast.LENGTH_SHORT).show();
+                            isGameInLibrary = false;
+                            addToLib.setText("Add to Library");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("GameDetail", "Error removing game from library", e);
+                            Toast.makeText(GameDetail.this, "Error removing game from library", Toast.LENGTH_SHORT).show();
                         }
                     });
         }else {

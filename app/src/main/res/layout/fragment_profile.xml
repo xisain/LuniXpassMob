@@ -22,14 +22,14 @@
             app:srcCompat="@drawable/xxpaass_logo" />
 
         <ImageView
-            android:id="@+id/notification"
+            android:id="@+id/logout"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentTop="true"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/cs"
-            app:srcCompat="@drawable/ic_notifications_black_24dp" />
+            app:srcCompat="@drawable/ic_logout_24" />
 
         <ImageView
             android:id="@+id/cs"
@@ -69,6 +69,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
+    <ImageView
+        android:id="@+id/edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_edit_24"
+        app:layout_constraintEnd_toStartOf="@+id/tv_username"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_username"
+        app:layout_constraintTop_toTopOf="@+id/tv_username" />
     <View
         android:id="@+id/dividerleft"
         android:layout_width="2dp"

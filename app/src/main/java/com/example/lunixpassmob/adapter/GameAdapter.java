@@ -47,9 +47,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.GameViewHolder
                 Intent intent = new Intent(context, GameDetail.class);
                 intent.putExtra("id", gameList.get(holder.getAdapterPosition()).getId());
                 context.startActivity(intent);
-                Log.w("Click", "onClick: " + gameList.get(holder.getAdapterPosition()).getId());
-                Toast toast = Toast.makeText(context, gameList.get(holder.getAdapterPosition()).getGameName(), Toast.LENGTH_SHORT);
-                toast.show();
             }
         });
     }
