@@ -111,11 +111,7 @@ public class ProfileFragment extends Fragment {
                         number_played.setText(value.getLong("statistic.game_owned").toString());
                         number_session.setText(value.getLong("statistic.game_time").toString());
                         number_achievment.setText(value.getLong("statistic.achievement").toString());
-                        if (value.getString("image") != null) {
-                            Glide.with(requireContext()).load(value.getString("image")).into(imageProfile);
-                        } else {
-                            Glide.with(requireContext()).load("https://firebasestorage.googleapis.com/v0/b/quiet-biplane-423907-k3.appspot.com/o/profile%2Fdefault.png?alt=media&token=68f08336-7d84-4a3c-8079-3851caf62768").into(imageProfile);
-                        }
+                            Glide.with(ProfileFragment.this).load(value.getString("image")).into(imageProfile);
                     }
                 }
             });
@@ -125,10 +121,23 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Glide.with(requireContext()).pauseRequests();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Glide.with(requireContext()).resumeRequests();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 
     private void showEditUsernameDialog() {
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_username, null);

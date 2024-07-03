@@ -44,30 +44,32 @@
 
     </RelativeLayout>
 
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="150dp"
-        android:scaleType="centerCrop"
+        android:layout_width="140dp"
+        android:layout_height="142dp"
+        android:layout_marginStart="132dp"
         android:background="@drawable/baseline_rounded_corner_24"
-        app:shapeAppearanceOverlay="@style/RoundedImageView"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.137" />
-
+        app:layout_constraintVertical_bias="0.139"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"
+        app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
         android:id="@+id/tv_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:text="Username"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
@@ -79,11 +81,14 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_username"
         app:layout_constraintBottom_toBottomOf="@+id/tv_username"
         app:layout_constraintTop_toTopOf="@+id/tv_username" />
+
+    <!-- fragment_example.xml -->
+
     <View
         android:id="@+id/dividerleft"
         android:layout_width="2dp"
         android:layout_height="80dp"
-        android:layout_marginStart="124dp"
+        android:layout_marginStart="112dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:background="#333333"
@@ -105,89 +110,80 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.42" />
 
-    <!-- fragment_example.xml -->
-
     <TextView
         android:id="@+id/text_numbergameplayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="276dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="356dp"
         android:text="0"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_gameplayed"
+        app:layout_constraintRight_toLeftOf="@id/dividerleft"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_gameplayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
         android:text="Game Played"
         android:textColor="#FFFFFF"
         android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_numbergameplayed" />
+        app:layout_constraintBottom_toTopOf="@id/text_numbergameplayed"
+        app:layout_constraintEnd_toEndOf="@id/dividerleft"
+        app:layout_constraintHorizontal_bias="0.372"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/text_numberplaysession"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="199dp"
-        android:layout_marginTop="276dp"
+        android:layout_marginStart="196dp"
+        android:layout_marginTop="356dp"
         android:text="0"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_playsesion"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_playsesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="164dp"
-        android:layout_marginTop="56dp"
         android:text="Play Session"
         android:textColor="#FFFFFF"
         android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_numberplaysession"
+        app:layout_constraintEnd_toEndOf="@id/dividerright"
         app:layout_constraintHorizontal_bias="0.005"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_numberplaysession" />
+        tools:layout_editor_absoluteY="356dp" />
 
     <TextView
         android:id="@+id/text_numberAchievment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="345dp"
-        android:layout_marginTop="276dp"
+        android:layout_marginStart="348dp"
+        android:layout_marginTop="356dp"
         android:text="0"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_achievment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_achievment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="304dp"
-        android:layout_marginTop="52dp"
         android:text="achievment"
         android:textColor="#FFFFFF"
         android:textSize="17dp"
+        app:layout_constraintBottom_toTopOf="@id/text_numberAchievment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_numberAchievment" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

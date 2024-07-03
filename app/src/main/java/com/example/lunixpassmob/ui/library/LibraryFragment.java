@@ -13,8 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lunixpassmob.R;
 import com.example.lunixpassmob.adapter.LibraryAdapter;
+import com.example.lunixpassmob.databinding.FragmentLibraryBinding;
+import com.example.lunixpassmob.databinding.FragmentProfileBinding;
 import com.example.lunixpassmob.model.user.LibModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,13 +38,14 @@ public class LibraryFragment extends Fragment {
     private List<LibModel> gameList;
     private FirebaseFirestore db;
     private FirebaseUser user;
+    private FragmentLibraryBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_library, container, false);
-
-        recyclerView = view.findViewById(R.id.library_recycle_view);
+        binding = FragmentLibraryBinding.inflate(inflater, container, false);
+         View  view = binding.getRoot();
+        recyclerView = binding.libraryRecycleView;
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
 
         gameList = new ArrayList<>();
@@ -60,6 +64,14 @@ public class LibraryFragment extends Fragment {
 
         return view;
     }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 
     private void loadUserLibrary() {
         DocumentReference userRef = db.collection("user").document(user.getUid());

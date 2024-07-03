@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lunixpassmob.Login;
 import com.example.lunixpassmob.R;
 import com.example.lunixpassmob.adapter.GameAdapter;
@@ -129,9 +130,13 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

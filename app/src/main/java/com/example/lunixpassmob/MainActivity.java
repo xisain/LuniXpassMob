@@ -1,9 +1,12 @@
 package com.example.lunixpassmob;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
+import com.bumptech.glide.Glide;
 import com.example.lunixpassmob.adapter.GameAdapter;
 import com.example.lunixpassmob.adapter.NewsAdapter;
 import com.example.lunixpassmob.adapter.RecommendAdapter;
@@ -81,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    }
+
+
+}
 
 

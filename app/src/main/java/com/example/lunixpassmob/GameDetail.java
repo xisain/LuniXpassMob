@@ -102,7 +102,7 @@ public class GameDetail extends AppCompatActivity {
                     String gameSizeStr = "";
 
                     if (gameDetailMap != null) {
-                        // Assuming "publisher" is a key in the gameDetail map and its value is the developer's name
+
                         gameDeveloperStr = (String) gameDetailMap.get("publisher");
                         gameReleaseDateStr = (String) gameDetailMap.get("release_date");
                         gameSizeStr = String.valueOf(gameDetailMap.get("size"));
