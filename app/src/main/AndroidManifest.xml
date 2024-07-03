@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LuniXpassMob"
         tools:targetApi="31">
+        <meta-data
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
         <activity android:name=".NewsDetail"
             android:exported="false">
 

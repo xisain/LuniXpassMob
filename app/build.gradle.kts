@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
+    id("com.google.firebase.firebase-perf")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -36,11 +38,14 @@ android {
 }
 
 dependencies {
+
     implementation(platform(libs.firebase.bom))
+    implementation (libs.firebase.appcheck.playintegrity)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
+    implementation (libs.firebase.perf)
     implementation (libs.material.v110)
     implementation (libs.glide)
     implementation(libs.appcompat)

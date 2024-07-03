@@ -3,7 +3,9 @@ package com.example.lunixpassmob.ui.profile;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.lunixpassmob.Login;
 import com.example.lunixpassmob.R;
 import com.example.lunixpassmob.databinding.FragmentProfileBinding;
@@ -28,15 +31,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import org.checkerframework.checker.units.qual.A;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class ProfileFragment extends Fragment {
-    TextView number_played, number_session, number_achievment , tv_username;
-    ImageView logout, edit;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    TextView number_played, number_session, number_achievment, tv_username;
+    ImageView logout, edit, imageProfile;
     private FragmentProfileBinding binding;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    Uri imageUri;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +54,7 @@ public class ProfileFragment extends Fragment {
         number_played = binding.textNumbergameplayed;
         number_session = binding.textNumberplaysession;
         number_achievment = binding.textNumberAchievment;
+        imageProfile = binding.profileImage;
         tv_username = binding.tvUsername;
         logout = binding.logout;
         edit = binding.edit;
@@ -54,7 +62,7 @@ public class ProfileFragment extends Fragment {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               showEditUsernameDialog();
+                showEditUsernameDialog();
             }
         });
 
@@ -77,31 +85,41 @@ public class ProfileFragment extends Fragment {
                         Intent intent = new Intent(requireContext(), Login.class);
                         startActivity(intent);
                     }
-                }) .create()
-                        .show();
+                }).create().show();
             }
         });
-        if(user !=null){
+
+        imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageChooser();
+            }
+        });
+
+        if (user == null) {
+            Intent intent = new Intent(requireContext(), Login.class);
+            startActivity(intent);
+        }
+
+        if (user != null) {
             DocumentReference docRef = db.collection("user").document(user.getUid());
             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value !=null && value.exists()){
-                tv_username.setText(value.getString("username"));
-                    tv_username.setText(value.getString("username"));
-                    number_played.setText(value.getLong("statistic.game_owned").toString());
-                    number_session.setText(value.getLong("statistic.game_time").toString());
-                    number_achievment.setText(value.getLong("statistic.achievement").toString());
-
-                }
+                    if (value != null && value.exists()) {
+                        tv_username.setText(value.getString("username"));
+                        number_played.setText(value.getLong("statistic.game_owned").toString());
+                        number_session.setText(value.getLong("statistic.game_time").toString());
+                        number_achievment.setText(value.getLong("statistic.achievement").toString());
+                        if (value.getString("image") != null) {
+                            Glide.with(requireContext()).load(value.getString("image")).into(imageProfile);
+                        } else {
+                            Glide.with(requireContext()).load("https://firebasestorage.googleapis.com/v0/b/quiet-biplane-423907-k3.appspot.com/o/profile%2Fdefault.png?alt=media&token=68f08336-7d84-4a3c-8079-3851caf62768").into(imageProfile);
+                        }
+                    }
                 }
             });
-
         }
-
-
-
-
 
         return root;
     }
@@ -113,23 +131,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showEditUsernameDialog() {
-        // Inflate the layout for the dialog
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit_username, null);
-
-        // Get the username text input from the dialog
         final EditText usernameInput = dialogView.findViewById(R.id.username_input);
-
-        // Create the dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle("Edit Username")
                 .setView(dialogView)
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Get the new username from the input
                         String newUsername = usernameInput.getText().toString().trim();
-
-                        // Update the username in the database
                         updateUsername(newUsername);
                     }
                 })
@@ -139,10 +149,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateUsername(String newUsername) {
-        // Get the current user
         FirebaseUser user = mAuth.getCurrentUser();
-
-        // Update the username in the Firestore database
         db.collection("user").document(user.getUid())
                 .update("username", newUsername)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -155,6 +162,100 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Handle the error
+                    }
+                });
+    }
+
+    private void openImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            uploadImage();
+        }
+    }
+
+    private void uploadImage() {
+        if (imageUri != null) {
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                String userId = user.getUid();
+                StorageReference profileImageRef = storage.getReference().child("profile/" + userId + ".jpg");
+
+                profileImageRef.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                profileImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String imageUrl = uri.toString();
+                                        updateProfileImage(imageUrl, userId);
+                                    }
+                                });
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        }
+    }
+
+    private void updateProfileImage(String imageUrl, String userId) {
+        // Update Firestore with new image URL
+        db.collection("user").document(userId)
+                .update("image", imageUrl)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(requireContext(), "Profile image updated", Toast.LENGTH_SHORT).show();
+
+                        // If there was an old image, delete it
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            DocumentReference userDocRef = db.collection("user").document(user.getUid());
+                            userDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    String oldImageUrl = documentSnapshot.getString("image");
+                                    if (oldImageUrl != null && !oldImageUrl.equals(imageUrl) && !oldImageUrl.equals("https://firebasestorage.googleapis.com/v0/b/quiet-biplane-423907-k3.appspot.com/o/profile%2Fdefault.png?alt=media&token=68f08336-7d84-4a3c-8079-3851caf62768")) {
+                                        deleteOldImage(oldImageUrl);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(requireContext(), "Failed to update profile image", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void deleteOldImage(String oldImageUrl) {
+        StorageReference oldImageRef = storage.getReferenceFromUrl(oldImageUrl);
+        oldImageRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
                     }
                 });
     }

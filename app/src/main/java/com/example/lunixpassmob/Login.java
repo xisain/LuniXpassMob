@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -32,6 +34,7 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         mAuth = FirebaseAuth.getInstance();
         super.onCreate(savedInstanceState);
@@ -53,7 +56,7 @@ public class Login extends AppCompatActivity {
                 public void onClick(View v) {
                     String email = Lemail.getText().toString().trim();
                     String password = Lpassword.getText().toString().trim();
-
+                    Log.w("Login", "Email: " + email + " Password: " + password);
                     if (TextUtils.isEmpty(email)) {
                         Toast.makeText(Login.this, "Enter Email", Toast.LENGTH_SHORT).show();
                         return;

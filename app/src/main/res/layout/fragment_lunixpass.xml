@@ -52,4 +52,165 @@
             app:srcCompat="@drawable/ic_account_circle_24" />
 
     </RelativeLayout>
+
+    <ScrollView
+
+        android:id="@+id/scrollView1"
+        android:layout_width="389dp"
+        android:layout_height="721dp"
+        app:layout_constraintEnd_toEndOf="@id/relative_layout"
+        app:layout_constraintStart_toStartOf="@id/relative_layout"
+        app:layout_constraintTop_toBottomOf="@id/relative_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="772dp"
+                android:orientation="vertical"
+
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="114dp"
+                    app:srcCompat="@drawable/xxpaass_logo" />
+
+                <TextView
+                    android:id="@+id/header"
+                    style="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView2"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:paddingTop="20dp"
+                    android:text="@string/header_lunixpass"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="214dp" />
+
+                <TextView
+                    android:id="@+id/Sub"
+                    style="@style/TextAppearance.MaterialComponents.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/header"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/Sub"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="322dp" />
+
+                <TextView
+                    android:id="@+id/tc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/Sub"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="298dp"
+                    android:layout_marginEnd="-1dp"
+                    android:gravity="center"
+                    android:text="@string/tc"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:layout_editor_absoluteX="10dp"
+                    tools:layout_editor_absoluteY="390dp" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tc"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="38dp"
+                    android:layout_marginEnd="75dp"
+                    android:text="@string/subscribe"
+                    android:textColor="@color/white"
+                    tools:layout_editor_absoluteX="85dp"
+                    tools:layout_editor_absoluteY="460dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/content2"
+                android:layout_width="match_parent"
+                android:layout_height="725dp"
+                android:orientation="vertical"
+
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:id="@+id/imageView22"
+                    android:layout_width="match_parent"
+                    android:layout_height="114dp"
+                    app:srcCompat="@drawable/xxpaass_logo" />
+
+                <TextView
+                    android:id="@+id/header2"
+                    style="@style/TextAppearance.MaterialComponents.Headline5"
+                    android:layout_width="279dp"
+                    android:layout_height="132dp"
+                    android:layout_below="@+id/imageView22"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="53dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:text="Skip the line with LuniXpass Game Pass!"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="214dp" />
+
+                <TextView
+                    android:id="@+id/Sub2"
+                    style="@style/TextAppearance.MaterialComponents.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/header2"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/subs2"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="322dp" />
+
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pass_recycle_view"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="59dp"
+                    android:layout_marginEnd="76dp"
+                    android:text="@string/subscribe"
+                    android:textColor="@color/white"
+                    tools:layout_editor_absoluteX="85dp"
+                    tools:layout_editor_absoluteY="460dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_below="@id/Sub2"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pass_recycle_view"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

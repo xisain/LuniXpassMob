@@ -44,17 +44,19 @@
 
     </RelativeLayout>
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="150dp"
-        android:background="@drawable/baseline_rounded_corner_24"
         android:scaleType="centerCrop"
+        android:background="@drawable/baseline_rounded_corner_24"
+        app:shapeAppearanceOverlay="@style/RoundedImageView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.137" />
+
 
     <TextView
         android:id="@+id/tv_username"
