@@ -134,16 +134,16 @@ public class GameDetail extends AppCompatActivity {
                             for (DocumentReference gameRef : library) {
                                 if (gameRef.getId().equals(gameId)) {
                                     isGameInLibrary = true;
-                                    addToLib.setText("Remove from Library");
+                                    addToLib.setText(R.string.remove_from_library);
                                     return;
                                 }
                             }
                         }
                         isGameInLibrary = false;
-                        addToLib.setText("Add to Library");
+                        addToLib.setText(R.string.add_to_library);
                     } else {
                         isGameInLibrary = false;
-                        addToLib.setText("Add to Library");
+                        addToLib.setText(R.string.remove_from_library);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -159,50 +159,100 @@ public class GameDetail extends AppCompatActivity {
     }
 
     private void addGameToLibrary(String gameId) {
-        if(user != null){
-            DocumentReference userRef = db.collection("user").document(user.getUid());
-            userRef.update("library", FieldValue.arrayUnion(db.collection("game").document(gameId)))
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(GameDetail.this, "Game added to library", Toast.LENGTH_SHORT).show();
-                            isGameInLibrary = true;
-                            addToLib.setText("Remove from Library");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("GameDetail", "Error adding game to library", e);
-                            Toast.makeText(GameDetail.this, "Error adding game to library", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }else {
-            Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
-        }
+        subsStatus(new OnSubscriptionCheckCompleteListener() {
+            @Override
+            public void onComplete(boolean isSubscribed) {
+                if (isSubscribed) {
+                    if (user != null) {
+                        DocumentReference userRef = db.collection("user").document(user.getUid());
+                        userRef.update("library", FieldValue.arrayUnion(db.collection("game").document(gameId)))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(GameDetail.this, "Game added to library", Toast.LENGTH_SHORT).show();
+                                        isGameInLibrary = true;
+                                        addToLib.setText(R.string.remove_from_library);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("GameDetail", "Error adding game to library", e);
+                                        Toast.makeText(GameDetail.this, "Error adding game to library", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(GameDetail.this, "Must Login First", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(GameDetail.this, "Need to subscribe to add games to library", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void removeGameFromLibrary(String gameId) {
-        if(user != null){
+        subsStatus(new OnSubscriptionCheckCompleteListener() {
+            @Override
+            public void onComplete(boolean isSubscribed) {
+                if (isSubscribed) {
+                    if (user != null) {
+                        DocumentReference userRef = db.collection("user").document(user.getUid());
+                        userRef.update("library", FieldValue.arrayRemove(db.collection("game").document(gameId)))
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(GameDetail.this, "Game removed from library", Toast.LENGTH_SHORT).show();
+                                        isGameInLibrary = false;
+                                        addToLib.setText(R.string.add_to_library);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w("GameDetail", "Error removing game from library", e);
+                                        Toast.makeText(GameDetail.this, "Error removing game from library", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(GameDetail.this, "Must Login First", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(GameDetail.this, "Need to subscribe to remove games from library", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+    public interface OnSubscriptionCheckCompleteListener {
+        void onComplete(boolean isSubscribed);
+    }
+
+    private void subsStatus(final OnSubscriptionCheckCompleteListener listener) {
+        if (user != null) {
             DocumentReference userRef = db.collection("user").document(user.getUid());
-            userRef.update("library", FieldValue.arrayRemove(db.collection("game").document(gameId)))
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(GameDetail.this, "Game removed from library", Toast.LENGTH_SHORT).show();
-                            isGameInLibrary = false;
-                            addToLib.setText("Add to Library");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("GameDetail", "Error removing game from library", e);
-                            Toast.makeText(GameDetail.this, "Error removing game from library", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }else {
+            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        Boolean subsStatus = documentSnapshot.getBoolean("subscription.subs_status");
+                        listener.onComplete(subsStatus != null && subsStatus);
+                    } else {
+                        listener.onComplete(false); // Document does not exist means no subscription
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("GameDetail", "Error checking subscription status", e);
+                    listener.onComplete(false); // Error means no subscription
+                }
+            });
+        } else {
             Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
+            listener.onComplete(false); // User is not logged in means no subscription
         }
     }
+
 }

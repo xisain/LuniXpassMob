@@ -12,4 +12,6 @@
     <string name="subscribe">Subscribe to Lunixpasss</string>
     <string name="tc">Terms and conditions apply, read LuniXpass Terms for complete details!</string>
     <string name="subs2">Get unlimited access to all our curated titles as soon as they are released exclusively in Premium edition game library. All for only IDR 60,000.00 per month!</string>
+    <string name="remove_from_library">Remove from Library</string>
+    <string name="add_to_library">Add to Library</string>
 </resources>

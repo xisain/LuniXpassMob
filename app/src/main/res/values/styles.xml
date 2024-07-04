@@ -5,5 +5,12 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item> <!-- Adjust as per your requirement -->
     </style>
-
+    <style name="custom_shape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+    <style name="custom_shape_2" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">4dp</item>
+    </style>
 </resources>

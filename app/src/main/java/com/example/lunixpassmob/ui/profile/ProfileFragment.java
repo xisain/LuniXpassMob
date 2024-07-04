@@ -65,7 +65,11 @@ public class ProfileFragment extends Fragment {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditUsernameDialog();
+               if(user != null) {
+                   showEditUsernameDialog();
+               } else {
+                   Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+               }
             }
         });
 
@@ -95,14 +99,13 @@ public class ProfileFragment extends Fragment {
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openImageChooser();
+               if(user != null) {
+                   openImageChooser();
+               } else {
+                   Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+               }
             }
         });
-
-        if (user == null) {
-            Intent intent = new Intent(requireContext(), Login.class);
-            startActivity(intent);
-        }
 
         if (user != null) {
             DocumentReference docRef = db.collection("user").document(user.getUid());

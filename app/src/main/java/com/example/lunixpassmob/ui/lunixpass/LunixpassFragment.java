@@ -111,7 +111,7 @@ public class LunixpassFragment extends Fragment {
             @Override
             public void onComplete(boolean isSubscribed) {
                 if(!isSubscribed){
-                    //TODO : Add subscription to database But Check User Already Subscribing Or Not if User already Subs Button is Disable
+
 
                     DocumentReference documentReference = db.collection("user").document(user.getUid());
                     Timestamp now = Timestamp.now();
@@ -126,6 +126,7 @@ public class LunixpassFragment extends Fragment {
                     documentReference.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Toast.makeText(requireContext(), "Thank You For Using Our Service", Toast.LENGTH_SHORT).show();
                             Log.d("Success", "Subscription updated successfully");
                         }
                     }).addOnFailureListener(new OnFailureListener() {

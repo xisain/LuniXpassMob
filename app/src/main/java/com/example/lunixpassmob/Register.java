@@ -90,9 +90,6 @@ public class Register extends AppCompatActivity {
         user.put("username", username);
         user.put("email", email);
         user.put("subscription", new HashMap<String, Object>() {{
-            put("subs_start_date", 0);
-            put("subs_type", 0);
-            put("subs_end_date", 0);
             put("subs_status", false);
         }});
         user.put("statistic", new HashMap<String, Object>() {{

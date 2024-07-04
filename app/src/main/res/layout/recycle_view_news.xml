@@ -17,10 +17,11 @@
     android:layout_height="wrap_content"
     android:background="#131313">
     <com.google.android.material.imageview.ShapeableImageView
+        app:shapeAppearance="@style/custom_shape"
         android:id="@+id/news_image"
         android:layout_width="324dp"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:paddingLeft="20dp"
         android:background="#131313"/>
 
