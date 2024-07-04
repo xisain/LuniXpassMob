@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -106,12 +109,17 @@ public class ProfileFragment extends Fragment {
             docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if (value != null && value.exists()) {
+                    if (value != null && value.exists() && getActivity() != null) {
                         tv_username.setText(value.getString("username"));
-                        number_played.setText(value.getLong("statistic.game_owned").toString());
+                        List<DocumentReference> library = (List<DocumentReference>) value.get("library");
+                        number_played.setText(String.valueOf(library.size()));
                         number_session.setText(value.getLong("statistic.game_time").toString());
                         number_achievment.setText(value.getLong("statistic.achievement").toString());
+                        if(value.getString("image") != null) {
                             Glide.with(ProfileFragment.this).load(value.getString("image")).into(imageProfile);
+                        } else {
+                            Glide.with(ProfileFragment.this).load("https://firebasestorage.googleapis.com/v0/b/quiet-biplane-423907-k3.appspot.com/o/profile%2Fdefault.png?alt=media&token=68f08336-7d84-4a3c-8079-3851caf62768").into(imageProfile);
+                        }
                     }
                 }
             });
@@ -122,8 +130,10 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onPause() {
-        super.onPause();
         Glide.with(requireContext()).pauseRequests();
+        super.onPause();
+        Log.w("ProfileFragment", "onPause() called");
+
     }
 
     @Override

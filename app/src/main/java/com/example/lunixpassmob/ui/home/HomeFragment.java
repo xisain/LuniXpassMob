@@ -133,6 +133,12 @@ public class HomeFragment extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Glide.with(requireContext()).resumeRequests();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
