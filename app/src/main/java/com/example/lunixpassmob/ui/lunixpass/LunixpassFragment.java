@@ -5,7 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,21 +18,35 @@ import com.example.lunixpassmob.adapter.GameAdapter;
 
 import com.example.lunixpassmob.databinding.FragmentLunixpassBinding;
 import com.example.lunixpassmob.model.game.Game;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LunixpassFragment extends Fragment {
+    Button  subscribe1, subscribe2;
     private RecyclerView  gameRecyclerView;
     private GameAdapter gameAdapter;
     private List<Game> gameList;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser user = mAuth.getCurrentUser();
     private FragmentLunixpassBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,9 +60,23 @@ public class LunixpassFragment extends Fragment {
         gameList = new ArrayList<>();
         gameAdapter = new GameAdapter(getContext(), gameList);
         gameRecyclerView.setAdapter(gameAdapter);
+        subscribe1 = binding.subscribe1;
+        subscribe2 = binding.subscribe2;
 
+        subscribe1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            subsEvent();
+            }
+        });
+        subscribe2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+        subsEvent();
+            }});
 
         View root = binding.getRoot();
+
         db.collection("game")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -73,8 +102,84 @@ public class LunixpassFragment extends Fragment {
                     }
                 });
 
+
         return root;
     }
+    public void subsEvent() {
+    if(user != null){
+        isSubsEnd(new OnSubscriptionCheckCompleteListener() {
+            @Override
+            public void onComplete(boolean isSubscribed) {
+                if(!isSubscribed){
+                    //TODO : Add subscription to database But Check User Already Subscribing Or Not if User already Subs Button is Disable
+
+                    DocumentReference documentReference = db.collection("user").document(user.getUid());
+                    Timestamp now = Timestamp.now();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(now.toDate());
+                    calendar.add(Calendar.DAY_OF_YEAR, 30);
+                    Date subsEndDate = calendar.getTime();
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("subscription.subs_start_date", FieldValue.serverTimestamp());
+                    updates.put("subscription.subs_status", true);
+                    updates.put("subscription.subs_end_date", new Timestamp(subsEndDate));
+                    documentReference.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Success", "Subscription updated successfully");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("Error", "Error updating subscription: " + e.getMessage());
+                        }
+                    });
+                } else {
+
+                    Log.w("SubscriptionCheck", "User Already Subs");
+                    Toast.makeText(getContext(), "Already Subscribing", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    } else {
+        Toast.makeText(getContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+    }
+    }
+    public void isSubsEnd(final OnSubscriptionCheckCompleteListener listener) {
+        if (user != null) {
+            db.collection("user").document(user.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        Timestamp subsEndDate = documentSnapshot.getTimestamp("subscription.subs_end_date");
+                        if (subsEndDate != null) {
+                            Timestamp now = Timestamp.now();
+                            boolean isSubscribed = subsEndDate.compareTo(now) > 0;
+                            listener.onComplete(isSubscribed);
+                        } else {
+                            listener.onComplete(false); // No subscription end date means not subscribed
+                        }
+                    } else {
+                        listener.onComplete(false); // Document does not exist means not subscribed
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w("SubscriptionCheck", "Error checking subscription", e);
+                    listener.onComplete(false); // Error means not subscribed
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+            listener.onComplete(false); // User is not logged in means not subscribed
+        }
+    }
+
+    public interface OnSubscriptionCheckCompleteListener {
+        void onComplete(boolean isSubscribed);
+    }
+
 
     @Override
     public void onDestroyView() {
