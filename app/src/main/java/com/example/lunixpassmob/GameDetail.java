@@ -162,8 +162,8 @@ public class GameDetail extends AppCompatActivity {
         subsStatus(new OnSubscriptionCheckCompleteListener() {
             @Override
             public void onComplete(boolean isSubscribed) {
-                if (isSubscribed) {
-                    if (user != null) {
+                if (user != null) {
+                    if (isSubscribed) {
                         DocumentReference userRef = db.collection("user").document(user.getUid());
                         userRef.update("library", FieldValue.arrayUnion(db.collection("game").document(gameId)))
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -195,8 +195,8 @@ public class GameDetail extends AppCompatActivity {
         subsStatus(new OnSubscriptionCheckCompleteListener() {
             @Override
             public void onComplete(boolean isSubscribed) {
-                if (isSubscribed) {
-                    if (user != null) {
+                if (user != null) {
+                    if (isSubscribed) {
                         DocumentReference userRef = db.collection("user").document(user.getUid());
                         userRef.update("library", FieldValue.arrayRemove(db.collection("game").document(gameId)))
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -251,7 +251,6 @@ public class GameDetail extends AppCompatActivity {
             });
         } else {
             Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
-            listener.onComplete(false); // User is not logged in means no subscription
         }
     }
 

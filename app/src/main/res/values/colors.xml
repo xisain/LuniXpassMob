@@ -10,4 +10,5 @@
     <color name="red">#FF0000</color>
     <color name="abu_abumuda">#1E1E1E</color>
     <color name="abu_abu">#131313</color>
+    <color name="transparent">#00000000</color>
 </resources>

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.lunixpassmob.Login;
+import com.example.lunixpassmob.MainActivity;
 import com.example.lunixpassmob.R;
 import com.example.lunixpassmob.adapter.GameAdapter;
 import com.example.lunixpassmob.adapter.NewsAdapter;
@@ -27,6 +28,7 @@ import com.example.lunixpassmob.databinding.FragmentHomeBinding;
 import com.example.lunixpassmob.model.game.Game;
 import com.example.lunixpassmob.model.news.NewsItem;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private ImageView img;
+    private ImageView log;
     private FragmentHomeBinding binding;
     private RecyclerView newsRecyclerView, gameRecyclerView, recommendedRecyclerView;
     private NewsAdapter newsAdapter;
@@ -51,15 +53,35 @@ public class HomeFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     final CollectionReference docRef = db.collection("user");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser user = mAuth.getCurrentUser();
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        log = binding.log;
+        if (user != null) {
+            log.setImageResource(R.drawable.ic_logout_24);
+            log.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAuth.signOut();
+                    Toast.makeText(getContext(), "Logout Success", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            log.setImageResource(R.drawable.ic_login_24);
+            log.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), Login.class);
+                    startActivity(intent);
+                }
+            });
+        }
         // Access views using the binding object
         newsRecyclerView = binding.newsRecycleView;
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -94,8 +116,7 @@ public class HomeFragment extends Fragment {
                                 String id = documentSnapshot.getId();
                                 String header = documentSnapshot.getString("header");
                                 String imageUrl = documentSnapshot.getString("image");
-                                newsList.add(new NewsItem(id,imageUrl, header));
-                                Log.w("Find ID ", id);
+                                newsList.add(new NewsItem(id, imageUrl, header));
                             }
                             newsAdapter.notifyDataSetChanged();
                         }
@@ -118,18 +139,17 @@ public class HomeFragment extends Fragment {
                                 String gameImage = documentSnapshot.getString("game_image");
                                 String gameDescription = documentSnapshot.getString("game_desc");
                                 List<String> genre = (List<String>) documentSnapshot.get("genre");
-                                Log.w("Find ID ", id);
                                 HashMap<String, Integer> gameDetail = (HashMap<String, Integer>) documentSnapshot.get("game_detail");
-                                gameList.add(new Game(id,gameName, gameDescription, gameImage, genre, gameDetail));
+                                gameList.add(new Game(id, gameName, gameDescription, gameImage, genre, gameDetail));
                             }
                             gameAdapter.notifyDataSetChanged();
                             recommendAdapter.notifyDataSetChanged();
                         }
                     }
                 });
+
         return root;
     }
-
 
 
     @Override

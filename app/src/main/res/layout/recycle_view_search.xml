@@ -4,17 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/cardView"
-    android:background="@color/black"
+    android:background="#131313"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="24dp"
-        android:background="@color/abu_abumuda">
+        android:background="#131313">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/gameImage"
+            app:shapeAppearance="@style/custom_shape_2"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="10dp"
