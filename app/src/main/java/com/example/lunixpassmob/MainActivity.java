@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            // Subscription updated successfully
+                            Toast.makeText(MainActivity.this, "Your Subscription Has Been Approved", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -187,10 +187,26 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("MainActivity", "onEvent: " + snapshot.getBoolean("isApproved"));
                     if (Boolean.TRUE.equals(snapshot.getBoolean("isApproved"))) {
                         updateSubscriptionStatus();
+                        deleteTransaction(transactionRef);
                     }
                 }
             }
         });
+    }
+    private void deleteTransaction(DocumentReference transactionRef) {
+        transactionRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("MainActivity", "Transaction successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("MainActivity", "Error deleting transaction", e);
+                    }
+                });
     }
 
     @Override
