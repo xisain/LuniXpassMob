@@ -55,11 +55,11 @@ public class MainActivity extends AppCompatActivity {
     private List<NewsItem> newsList;
     private List<Game> gameList;
     private ActivityMainBinding binding;
-
+    private Boolean sekali = false;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
-
+    private Boolean once;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,11 +70,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         getSupportActionBar().hide();
         setContentView(binding.getRoot());
-
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-
+        once =false;
         // Track user subscription status in real-time
         if (user != null) {
             String uid = user.getUid();
@@ -86,18 +85,20 @@ public class MainActivity extends AppCompatActivity {
                                 return;
                             }
                             if (snapshot != null && snapshot.exists()) {
+                                Boolean subsStatus = snapshot.getBoolean("subscription.subs_status");
                                 Date subsEndDate = snapshot.getDate("subscription.subs_end_date");
-                                if (subsEndDate != null) {
+                                if (subsEndDate != null && subsStatus != null) {
                                     Date now = new Date();
-                                    if (subsEndDate.before(now)) {
+                                    if (subsEndDate.before(now) || subsStatus.equals(false)) {
                                         // Update subs_status to false if subs_end_date < now
                                         db.collection("user").document(uid)
                                                 .update("subscription.subs_status", false, "library", new ArrayList<>())
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        Toast.makeText(MainActivity.this, "Your Subscription Has Ended", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(MainActivity.this, "Your Subscription Has Ended", Toast.LENGTH_SHORT).show();
                                                     }
+
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -106,14 +107,17 @@ public class MainActivity extends AppCompatActivity {
                                                     }
                                                 });
                                     } else {
-                                        Toast.makeText(MainActivity.this, "Your Subscription is still Active Until " + subsEndDate, Toast.LENGTH_SHORT).show();
+                                        if(!once) {
+                                            Toast.makeText(MainActivity.this, "Your Subscription is still Active Until " + subsEndDate, Toast.LENGTH_SHORT).show();
+                                            once=true;
+                                        }
                                     }
                                 }
                             }
                         }
                     });
 
-            // Check latest transaction for user
+            // Check latest transaction for user when app starts
             db.collection("transaksi")
                     .whereEqualTo("id_user", user.getUid())
                     .limit(1)
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateSubscriptionStatus() {
         if (user != null) {
+
             DocumentReference userRef = db.collection("user").document(user.getUid());
 
             // Calculate end date (30 days from now)
@@ -160,7 +165,11 @@ public class MainActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(MainActivity.this, "Your Subscription Has Been Approved", Toast.LENGTH_SHORT).show();
+                           if(!sekali) {
+                               Toast.makeText(MainActivity.this, "Your Subscription Has Been Approved", Toast.LENGTH_SHORT).show();
+                                sekali=true;
+                           }
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lunixpassmob.Login;
 import com.example.lunixpassmob.MainActivity;
 import com.example.lunixpassmob.PaymentActivity;
 import com.example.lunixpassmob.R;
@@ -27,8 +28,10 @@ import com.example.lunixpassmob.adapter.GameAdapter;
 
 import com.example.lunixpassmob.databinding.FragmentLunixpassBinding;
 import com.example.lunixpassmob.model.game.Game;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class LunixpassFragment extends Fragment {
     Button  subscribe1, subscribe2;
@@ -84,9 +88,12 @@ public class LunixpassFragment extends Fragment {
                @Override
                public void onClick(View view) {
                    if(user != null){
-                       mulaiActivity();
+                       checkSubs();
+//                       mulaiActivity();
                    }else {
-                       Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+                       mustLogin();
+                       Intent i = new Intent(getContext(), Login.class);
+                       startActivity(i);
                    }
                }
            });
@@ -94,9 +101,10 @@ public class LunixpassFragment extends Fragment {
                @Override
                public void onClick(View view) {
                        if(user != null){
-                           mulaiActivity();
+                           checkSubs();
                        } else {
-                           Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+                          mustLogin();
+
                        }
                }});
 
@@ -131,77 +139,30 @@ public class LunixpassFragment extends Fragment {
 
         return root;
     }
-    public void subsEvent() {
-    if(user != null){
-        isSubsEnd(new OnSubscriptionCheckCompleteListener() {
-            @Override
-            public void onComplete(boolean isSubscribed) {
-                if(!isSubscribed){
-                    DocumentReference documentReference = db.collection("user").document(user.getUid());
-                    Timestamp now = Timestamp.now();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(now.toDate());
-                    calendar.add(Calendar.DAY_OF_YEAR, 30);
-                    Date subsEndDate = calendar.getTime();
-                    Map<String, Object> updates = new HashMap<>();
-                    updates.put("subscription.subs_start_date", FieldValue.serverTimestamp());
-                    updates.put("subscription.subs_status", true);
-                    updates.put("subscription.subs_end_date", new Timestamp(subsEndDate));
-                    documentReference.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(requireContext(), "Thank You For Using Our Service", Toast.LENGTH_SHORT).show();
-                            Log.d("Success", "Subscription updated successfully");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("Error", "Error updating subscription: " + e.getMessage());
-                        }
-                    });
-                } else {
-                    Log.w("SubscriptionCheck", "User Already Subs");
-                    Toast.makeText(getContext(), "Already Subscribing", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    } else {
-        Toast.makeText(getContext(), "Must Login First", Toast.LENGTH_SHORT).show();
-    }
-    }
-    public void isSubsEnd(final OnSubscriptionCheckCompleteListener listener) {
+    public void checkSubs() {
         if (user != null) {
-            db.collection("user").document(user.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            DocumentReference subRef = db.collection("user").document(user.getUid());
+            subRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
-                        Timestamp subsEndDate = documentSnapshot.getTimestamp("subscription.subs_end_date");
-                        if (subsEndDate != null) {
-                            Timestamp now = Timestamp.now();
-                            boolean isSubscribed = subsEndDate.compareTo(now) > 0;
-                            listener.onComplete(isSubscribed);
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Boolean hasSubscription = document.getBoolean("subscription.subs_status");
+                            if (Boolean.TRUE.equals(hasSubscription)) {
+                                Toast.makeText(requireContext(), "You already have a subscription", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mulaiActivity();
+                            }
                         } else {
-                            listener.onComplete(false); // No subscription end date means not subscribed
+                            mulaiActivity();
                         }
                     } else {
-                        listener.onComplete(false); // Document does not exist means not subscribed
+                        Log.d("LunixpassFragment", "Failed with: ", task.getException());
                     }
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w("SubscriptionCheck", "Error checking subscription", e);
-                    listener.onComplete(false); // Error means not subscribed
-                }
             });
-        } else {
-            Toast.makeText(getContext(), "Must Login First", Toast.LENGTH_SHORT).show();
-            listener.onComplete(false); // User is not logged in means not subscribed
         }
-    }
-
-    public interface OnSubscriptionCheckCompleteListener {
-        void onComplete(boolean isSubscribed);
     }
 
     public void mulaiActivity() {
@@ -226,7 +187,9 @@ public class LunixpassFragment extends Fragment {
       */
 
 
-
+    public void mustLogin(){
+        Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

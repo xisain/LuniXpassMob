@@ -27,9 +27,13 @@ import com.example.lunixpassmob.adapter.RecommendAdapter;
 import com.example.lunixpassmob.databinding.FragmentHomeBinding;
 import com.example.lunixpassmob.model.game.Game;
 import com.example.lunixpassmob.model.news.NewsItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -42,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private ImageView log;
+    private ImageView log, icon;
     private FragmentHomeBinding binding;
     private RecyclerView newsRecyclerView, gameRecyclerView, recommendedRecyclerView;
     private NewsAdapter newsAdapter;
@@ -61,8 +65,30 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         log = binding.log;
+        icon = binding.icon;
         if (user != null) {
             log.setImageResource(R.drawable.ic_logout_24);
+            // Set image with Glide from URL in user collection Firestore image
+            DocumentReference userRef = db.collection("user").document(user.getUid());
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String imageUrl = document.getString("image");
+                            if (imageUrl != null && !imageUrl.isEmpty()) {
+                                Glide.with(requireContext())
+                                        .load(imageUrl)
+                                        .into(icon);
+                            }
+                        }
+                    } else {
+                        Log.d("LunixpassFragment", "Failed with: ", task.getException());
+                    }
+                }
+            });
+
             log.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -73,6 +99,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         } else {
+            icon.setVisibility(View.INVISIBLE);
             log.setImageResource(R.drawable.ic_login_24);
             log.setOnClickListener(new View.OnClickListener() {
                 @Override

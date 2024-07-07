@@ -131,25 +131,7 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
-    @Override
-    public void onPause() {
-        Glide.with(requireContext()).pauseRequests();
-        super.onPause();
-        Log.w("ProfileFragment", "onPause() called");
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Glide.with(requireContext()).resumeRequests();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 
 
     private void showEditUsernameDialog() {
@@ -281,4 +263,10 @@ public class ProfileFragment extends Fragment {
                     }
                 });
     }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 }

@@ -182,10 +182,11 @@ public class GameDetail extends AppCompatActivity {
                                     }
                                 });
                     } else {
-                        Toast.makeText(GameDetail.this, "Must Login First", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameDetail.this, "Need to subscribe to add games to library", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(GameDetail.this, "Need to subscribe to add games to library", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameDetail.this, "Must Login First", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
