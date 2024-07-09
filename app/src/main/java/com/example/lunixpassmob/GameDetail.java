@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,6 +26,8 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -91,30 +94,35 @@ public class GameDetail extends AppCompatActivity {
                     Toast.makeText(GameDetail.this, "Error fetching game details", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (documentSnapshot != null && documentSnapshot.exists()) {
+                // require gameDetail context to be non-null
+                if (documentSnapshot != null && documentSnapshot.exists()&& getApplicationContext() != null) {
                     String gameNameStr = documentSnapshot.getString("game_name");
                     String gameDescStr = documentSnapshot.getString("game_desc");
                     String gameImageStr = documentSnapshot.getString("game_image");
                     HashMap<String, Object> gameDetailMap = (HashMap<String, Object>) documentSnapshot.get("game_detail");
                     String gameDeveloperStr = "";
-                    String gameReleaseDateStr = "";
+                    Date gameReleaseDateStr = new Date();
                     String gameSizeStr = "";
 
                     if (gameDetailMap != null) {
-
                         gameDeveloperStr = (String) gameDetailMap.get("publisher");
-                        gameReleaseDateStr = (String) gameDetailMap.get("release_date");
+                        Timestamp timestamp = (Timestamp) gameDetailMap.get("release_date");
+                        if (timestamp != null) {
+                            gameReleaseDateStr = timestamp.toDate();
+                        }
                         gameSizeStr = String.valueOf(gameDetailMap.get("size"));
                     }
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+                    String formattedDate = dateFormat.format(gameReleaseDateStr);
 
                     gameName.setText(gameNameStr);
                     gameDesc.setText(gameDescStr);
                     gameDeveloper.setText("Developer: " + gameDeveloperStr);
-                    gameReleaseDate.setText("Release Date: " + gameReleaseDateStr);
+                    gameReleaseDate.setText("Release Date: " + formattedDate);
                     gameSize.setText("Size: " + gameSizeStr + "GB");
 
-                    Glide.with(GameDetail.this).load(gameImageStr).into(gameImage);
+                    Glide.with(getApplicationContext()).load(gameImageStr).into(gameImage);
                 } else {
                     Toast.makeText(GameDetail.this, "Game not found", Toast.LENGTH_SHORT).show();
                 }
@@ -154,7 +162,7 @@ public class GameDetail extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "Must Login First", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.must_login, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -255,4 +263,22 @@ public class GameDetail extends AppCompatActivity {
         }
     }
 
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d("GameDetail", "onDestroy: Called");
+    }
+    @Override
+    protected void onPause() {
+        Log.d("GameDetail", "onPause: Called");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("GameDetail", "onResume: Called");
+        super.onResume();
+    }
 }

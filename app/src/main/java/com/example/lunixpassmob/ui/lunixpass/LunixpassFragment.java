@@ -188,7 +188,7 @@ public class LunixpassFragment extends Fragment {
 
 
     public void mustLogin(){
-        Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), R.string.must_login, Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onDestroyView() {

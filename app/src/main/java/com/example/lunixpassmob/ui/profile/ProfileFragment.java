@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment {
                if(user != null) {
                    showEditUsernameDialog();
                } else {
-                   Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(requireContext(), R.string.must_login, Toast.LENGTH_SHORT).show();
                }
             }
         });
@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
                if(user != null) {
                    openImageChooser();
                } else {
-                   Toast.makeText(requireContext(), "Must Login First", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(requireContext(), R.string.must_login, Toast.LENGTH_SHORT).show();
                }
             }
         });
@@ -115,9 +115,13 @@ public class ProfileFragment extends Fragment {
                     if (value != null && value.exists() && getActivity() != null) {
                         tv_username.setText(value.getString("username"));
                         List<DocumentReference> library = (List<DocumentReference>) value.get("library");
-                        number_played.setText(String.valueOf(library.size()));
-                        number_session.setText(value.getLong("statistic.game_time").toString());
-                        number_achievment.setText(value.getLong("statistic.achievement").toString());
+                        if(library != null) {
+                            number_played.setText(String.valueOf(library.size()));
+                        }else {
+                            number_played.setText("0");
+                        }
+                        number_session.setText(value.get("statistic.game_time").toString());
+                        number_achievment.setText(value.get("statistic.achievement").toString());
                         if(value.getString("image") != null) {
                             Glide.with(ProfileFragment.this).load(value.getString("image")).into(imageProfile);
                         } else {

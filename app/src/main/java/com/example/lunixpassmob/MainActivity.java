@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private List<NewsItem> newsList;
     private List<Game> gameList;
     private ActivityMainBinding binding;
-    private Boolean sekali = false;
+    private boolean sekali = false;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -165,17 +165,16 @@ public class MainActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                           if(!sekali) {
-                               Toast.makeText(MainActivity.this, "Your Subscription Has Been Approved", Toast.LENGTH_SHORT).show();
+                            if(!sekali) {
+                                Toast.makeText(MainActivity.this, "Your Subscription Has Been Approved", Toast.LENGTH_SHORT).show();
                                 sekali=true;
-                           }
-
+                            }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            // Handle error updating subscription
+
                             Log.w("MainActivity", "Error updating subscription", e);
                         }
                     });
@@ -195,28 +194,34 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot != null && snapshot.exists()) {
                     Log.w("MainActivity", "onEvent: " + snapshot.getBoolean("isApproved"));
                     if (Boolean.TRUE.equals(snapshot.getBoolean("isApproved"))) {
-                        updateSubscriptionStatus();
-                        deleteTransaction(transactionRef);
+                        String transactionUserId = snapshot.getString("id_user");
+                        // match user uid with transaction id_user
+                        if (user != null && user.getUid().equals(transactionUserId)) {
+                            updateSubscriptionStatus();
+//                            deleteTransaction(transactionRef);
+                        }
                     }
                 }
             }
         });
     }
-    private void deleteTransaction(DocumentReference transactionRef) {
-        transactionRef.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("MainActivity", "Transaction successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("MainActivity", "Error deleting transaction", e);
-                    }
-                });
-    }
+
+//    private void deleteTransaction(DocumentReference transactionRef) {
+//        transactionRef.delete()
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d("MainActivity", "Transaction successfully deleted!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w("MainActivity", "Error deleting transaction", e);
+//                    }
+//                });
+//    }
+
 
     @Override
     protected void onPause() {

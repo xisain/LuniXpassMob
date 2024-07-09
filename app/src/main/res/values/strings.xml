@@ -14,5 +14,8 @@
     <string name="subs2">Get unlimited access to all our curated titles as soon as they are released exclusively in Premium edition game library. All for only IDR 60,000.00 per month!</string>
     <string name="remove_from_library">Remove from Library</string>
     <string name="add_to_library">Add to Library</string>
-    <string name="pay">Upload Bukti Pembayaran</string>
+    <string name="pay">Upload Payment Proof</string>
+    <string name="up_bukti">Upload Bukti Pembayaran</string>
+    <string name="must_login">Must Login First</string>
+    <string name="payment_mock">Please Make Payment Into \n Account number : 1330242198 \n Bank Name : Mandiri \n Amount: Rp. 65.000</string>
 </resources>

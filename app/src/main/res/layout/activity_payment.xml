@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,25 +8,47 @@
     android:padding="16dp"
     android:background="#131313">
 
-    <com.google.android.material.textview.MaterialTextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload Bukti Pembayaran"
-        android:textSize="22sp"
-        android:textColor="@color/white"
-         android:gravity="center"
-        android:textStyle="bold"
-        android:textAllCaps="true"
-        style="@style/TextAppearance.AppCompat.Headline"/>
-    <ImageView
-        android:id="@+id/payment_prove"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/lunixpass_removebgpng"/>
-    <Button
-        android:id="@+id/button_pembayaran"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pay"
-        android:onClick="uploadBuktiPembayaran"/>
-</LinearLayout>
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pay"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            style="@style/TextAppearance.AppCompat.Headline"/>
+
+        <!-- Mock Transaction Data -->
+        <TextView
+            android:id="@+id/transaction_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="#1e1e1e"
+            android:textColor="@color/white"
+            android:text="@string/payment_mock"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="16dp"/>
+
+        <ImageView
+            android:id="@+id/payment_prove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/lunixpass_removebgpng"/>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/button_pembayaran"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pay"
+            android:onClick="uploadBuktiPembayaran"/>
+    </LinearLayout>
+</ScrollView>

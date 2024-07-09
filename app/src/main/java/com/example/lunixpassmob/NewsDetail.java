@@ -17,6 +17,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NewsDetail extends AppCompatActivity {
@@ -38,6 +39,10 @@ public class NewsDetail extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         Bundle extras = getIntent().getExtras();
         String uid = extras.getString("id");
+        // date Formate
+        String pattern = "dd MMMM yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
         if(uid !=null){
 
             DocumentReference newsRef = db.collection("berita").document(uid);
@@ -54,9 +59,10 @@ public class NewsDetail extends AppCompatActivity {
                         newsHeader.setText(documentSnapshot.getString("header"));
                         newsContent.setText(documentSnapshot.getString("content"));
 
-                        Date date = documentSnapshot.getDate("date");
                         String newsImageStr = documentSnapshot.getString("image");
-                        newsDate.setText(date.toString());
+                        // Nampilin Date
+                        String date = simpleDateFormat.format(documentSnapshot.getDate("date"));
+                        newsDate.setText(date);
                         Glide.with(NewsDetail.this).load(newsImageStr).into(newsImage);
                     } else {
                         Toast.makeText(NewsDetail.this, "Game not found", Toast.LENGTH_SHORT).show();
